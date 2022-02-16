@@ -228,6 +228,7 @@
 		order by r.reservation_no
 	</select>
 	
+	<!-- 결제/환불 티켓 정보 조회 -->
 	<select id="getAllReservatioin" parameterType="com.nadri.train.dto.TrainReservationCriteria" resultType="com.nadri.train.dto.TrainReservaionTicket">
 		SELECT  a.ticket_no as ticketNo, 
 		        a.schedule_departure_time as departureDate, 
@@ -255,8 +256,8 @@
                 end as price
 		        from train_ticket t, train_room r, train_price p, train_reservation n, train b, train_type e, 
 		            train_schedule s, train_route u, train_station t1, train_station t2, TRAIN_REFUND f
-		        where n.reservation_date >= #{startDate}
-		        and n.reservation_date &lt; #{endDate}+1
+		        where s.schedule_departure_time >= #{startDate}
+		        and s.schedule_departure_time &lt; #{endDate}+1
 		        and n.user_no = #{userNo}
 		        and n.TICKETING_STATUS in ('결제', '취소')
 		        and t.reservation_no = n.reservation_no
@@ -275,13 +276,14 @@
 	
 	<select id="getReservationCount" parameterType="com.nadri.train.dto.TrainReservationCriteria" resultType="int">
 		select count(*)
-		from train_reservation r, train_ticket t
+		from train_reservation r, train_ticket t, train_schedule s
 		<where>
 			r.user_no = #{userNo}
-			and r.reservation_date >= #{startDate }
-			and r.reservation_date &lt; #{endDate }+1
+			and s.schedule_departure_time >= #{startDate }
+			and s.schedule_departure_time &lt; #{endDate }+1
 			and r.TICKETING_STATUS in ('결제', '취소')
 			and r.reservation_no = t.reservation_no
+			and t.schedule_no = s.schedule_no
 		</where>
 	</select>
 	
