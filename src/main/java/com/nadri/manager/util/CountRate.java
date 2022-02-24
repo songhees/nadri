@@ -10,6 +10,11 @@ import com.nadri.manager.web.restController.ManagerRestController;
 
 import lombok.Data;
 
+/**
+ * 비율 계산
+ * @author song
+ *
+ */
 @Data
 public class CountRate {
 	static final Logger log = LogManager.getLogger(ManagerRestController.class);

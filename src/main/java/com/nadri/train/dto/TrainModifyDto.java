@@ -4,6 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 티켓 수정 정보
+ * @author song
+ *
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

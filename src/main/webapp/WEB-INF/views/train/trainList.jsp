@@ -129,6 +129,19 @@
 		font-weight: bold;
 		background-color: #7E5C5E;
 	}
+	
+	.listTable [disabled=disabled] {
+		width: 90px;
+		height: 25px;
+		padding: initial;
+		color: white;
+		border-radius: 0;
+		font-size: .875rem;
+		font-weight: bold;
+		background-color: gray;
+	
+	}
+	
 	#btn1 button, #btn2 button {
 		width: 90px;
 		height: 35px;
@@ -893,7 +906,7 @@
 		// 좌석 모달창에서 호차를 클릭할 때 // 호차에 해당하는 좌석이 뜬다. 다른 좌석 정보는 숨겨짐
 		$("#hocha").on('click', 'span.can', function(event) {
 			event.preventDefault();
-			$("#hocha span").removeClass("chosen").addClass("can")
+			$("#hocha span.chosen").removeClass("chosen").addClass("can")
 			$(this).removeClass("can").addClass("chosen")
 			$("#seatList").find('.chosen').removeClass("chosen").addClass("can")
 			

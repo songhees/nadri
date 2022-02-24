@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ import com.nadri.train.service.TrainService;
 import com.nadri.train.util.RefundUtils;
 import com.nadri.train.util.SessionUtils;
 import com.nadri.train.vo.TrainReservation;
+import com.nadri.train.vo.TrainSchedule;
 import com.nadri.train.vo.TrainTicket;
 import com.nadri.train.web.model.TrainSearchForm;
 import com.nadri.user.annotation.LoginedUser;
@@ -238,6 +240,7 @@ public class TrainController {
 	@GetMapping("/resultPayment.nadri")
 	public String resultPayment(@LoginedUser User user, int reservationNo1, @RequestParam(name="reservationNo2", required=false, defaultValue= "0") int reservationNo2, Model model) {
 		List<TrainReservation> reservationList = service.getReservationByNo(user.getNo(), reservationNo1, reservationNo2);
+		// IndexOutOfBoundsException발생시 환불시키디
 		long totalPrice = 0;
 		for(TrainReservation reservation : reservationList) {
 			totalPrice += reservation.getTotalPrice();
@@ -321,30 +324,30 @@ public class TrainController {
 	}
 		
 //  스케줄 값 늘리는 메소드
-//	@GetMapping("/insert.do")
-//	public void insertSchedule() {
-//		
-//		List<TrainSchedule> schedules = service.getAllSchedules();
-//		List<TrainSchedule> newSchedules = new ArrayList<>();
-//		// 부터 시작!
-//		for (int i=31; i<41; i++) {
-//			for(TrainSchedule schedule : schedules) {
-//				TrainSchedule nwschedule = new TrainSchedule(); 
-//				Calendar cal = Calendar.getInstance();
-//					
-//				cal.setTime(schedule.getDepartureTime());
-//				cal.add(Calendar.DATE, i);
-//				nwschedule.setDepartureTime(cal.getTime());
-//				
-//				cal.setTime(schedule.getArrivalTime()); 
-//				cal.add(Calendar.DATE, i); 
-//				nwschedule.setArrivalTime(cal.getTime());
-//				
-//				nwschedule.setTrainNo(schedule.getTrainNo());
-//				nwschedule.setRouteNo(schedule.getRouteNo());
-//				newSchedules.add(nwschedule);
-//			}
-//		}
-//		service.addNewSchedule(newSchedules);
-//	}
+	@GetMapping("/insert.do")
+	public void insertSchedule() {
+		
+		List<TrainSchedule> schedules = service.getAllSchedules();
+		List<TrainSchedule> newSchedules = new ArrayList<>();
+		// 부터 시작!
+		for (int i=41; i<51; i++) {
+			for(TrainSchedule schedule : schedules) {
+				TrainSchedule nwschedule = new TrainSchedule(); 
+				Calendar cal = Calendar.getInstance();
+					
+				cal.setTime(schedule.getDepartureTime());
+				cal.add(Calendar.DATE, i);
+				nwschedule.setDepartureTime(cal.getTime());
+				
+				cal.setTime(schedule.getArrivalTime()); 
+				cal.add(Calendar.DATE, i); 
+				nwschedule.setArrivalTime(cal.getTime());
+				
+				nwschedule.setTrainNo(schedule.getTrainNo());
+				nwschedule.setRouteNo(schedule.getRouteNo());
+				newSchedules.add(nwschedule);
+			}
+		}
+		service.addNewSchedule(newSchedules);
+	}
 }

@@ -5,6 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 예약, 티켓 정보
+ * @author song
+ *
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

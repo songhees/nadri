@@ -8,6 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 열차 스케줄 검색
+ * @author song
+ *
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
