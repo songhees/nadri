@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +32,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.nadri.train.dto.TrainCriteria;
 import com.nadri.train.dto.TrainSearchDto;
 import com.nadri.train.exception.KakaoException;
+import com.nadri.train.service.KakaoPayService;
 import com.nadri.train.service.TrainService;
 import com.nadri.train.util.RefundUtils;
 import com.nadri.train.util.SessionUtils;
 import com.nadri.train.vo.TrainReservation;
+import com.nadri.train.vo.TrainSchedule;
 import com.nadri.train.vo.TrainTicket;
 import com.nadri.train.web.model.TrainSearchForm;
 import com.nadri.user.annotation.LoginedUser;
@@ -176,54 +179,31 @@ public class TrainController {
 	// 결제 승인 신청
 	@GetMapping("/kakaoPayment.nadri")
 	public String kakaoPayment(@LoginedUser User user, String pg_token, Model model) throws IOException {
-		StringBuffer outPutData = new StringBuffer();
 		String reservationNo = (String)SessionUtils.getAttribute("reservationNo");
+		String tid = (String)SessionUtils.getAttribute("tid");
+		KakaoPayService.payApprove(tid, pg_token, user.getId(), reservationNo);
+		
 		String[] noList = reservationNo.split(" ");
-		outPutData.append("cid=TC0ONETIME")
-				.append("&tid=").append((String)SessionUtils.getAttribute("tid"))
-				.append("&partner_order_id=").append(reservationNo)
-				.append("&partner_user_id=").append(user.getId())
-				.append("&pg_token=").append(pg_token);
-		
-		URL address = new URL("https://kapi.kakao.com/v1/payment/approve");
-		HttpURLConnection conn = (HttpURLConnection) address.openConnection();
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Authorization", "KakaoAK 5fa0f0222e9a68676ec86330e233e3e7");
-		conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-		conn.setDoOutput(true);
-		
-		OutputStream outPut = conn.getOutputStream();
-		DataOutputStream data = new DataOutputStream(outPut);
-		data.writeBytes(outPutData.toString());
-		data.flush();
-		data.close();
-		
-		BufferedReader rd;
-		if(conn.getResponseCode() == 200) {
-			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			if (noList.length == 1) {
-				TrainReservation reservation = service.getReservationOne(user.getNo(), Integer.parseInt(noList[0]));
+		if (noList.length == 1) {
+			TrainReservation reservation = service.getReservationOne(user.getNo(), Integer.parseInt(noList[0]));
+			reservation.setTickectStatus("결제");
+			reservation.setSoldDate(new Date());
+			reservation.setTid(tid);
+			service.updateReservation(reservation);
+			SessionUtils.removeAttribute("tid");
+			SessionUtils.removeAttribute("reservationNo");
+			return "redirect:/train/resultPayment.nadri?reservationNo1=" + noList[0];
+		} else {
+			List<TrainReservation> reservationList = service.getReservationByNo(user.getNo(), Integer.parseInt(noList[0]), Integer.parseInt(noList[1]));
+			for (TrainReservation reservation: reservationList) {
 				reservation.setTickectStatus("결제");
 				reservation.setSoldDate(new Date());
-				reservation.setTid((String)SessionUtils.getAttribute("tid"));
+				reservation.setTid(tid);
 				service.updateReservation(reservation);
-				SessionUtils.removeAttribute("tid");
-				SessionUtils.removeAttribute("reservationNo");
-				return "redirect:/train/resultPayment.nadri?reservationNo1=" + noList[0];
-			} else {
-				List<TrainReservation> reservationList = service.getReservationByNo(user.getNo(), Integer.parseInt(noList[0]), Integer.parseInt(noList[1]));
-				for (TrainReservation reservation: reservationList) {
-					reservation.setTickectStatus("결제");
-					reservation.setSoldDate(new Date());
-					reservation.setTid((String)SessionUtils.getAttribute("tid"));
-					service.updateReservation(reservation);
-				}
-				SessionUtils.removeAttribute("tid");
-				SessionUtils.removeAttribute("reservationNo");
-				return "redirect:/train/resultPayment.nadri?reservationNo1=" + noList[0] + "&reservationNo2=" + noList[1];
 			}
-		} else {
-			throw new KakaoException("진행중인 거래가 있습니다. 잠시 후 다시 시도해 주세요.");
+			SessionUtils.removeAttribute("tid");
+			SessionUtils.removeAttribute("reservationNo");
+			return "redirect:/train/resultPayment.nadri?reservationNo1=" + noList[0] + "&reservationNo2=" + noList[1];
 		}
 	}
 	
@@ -238,6 +218,7 @@ public class TrainController {
 	@GetMapping("/resultPayment.nadri")
 	public String resultPayment(@LoginedUser User user, int reservationNo1, @RequestParam(name="reservationNo2", required=false, defaultValue= "0") int reservationNo2, Model model) {
 		List<TrainReservation> reservationList = service.getReservationByNo(user.getNo(), reservationNo1, reservationNo2);
+		// IndexOutOfBoundsException발생시 환불시키디
 		long totalPrice = 0;
 		for(TrainReservation reservation : reservationList) {
 			totalPrice += reservation.getTotalPrice();
@@ -321,30 +302,30 @@ public class TrainController {
 	}
 		
 //  스케줄 값 늘리는 메소드
-//	@GetMapping("/insert.do")
-//	public void insertSchedule() {
-//		
-//		List<TrainSchedule> schedules = service.getAllSchedules();
-//		List<TrainSchedule> newSchedules = new ArrayList<>();
-//		// 부터 시작!
-//		for (int i=31; i<41; i++) {
-//			for(TrainSchedule schedule : schedules) {
-//				TrainSchedule nwschedule = new TrainSchedule(); 
-//				Calendar cal = Calendar.getInstance();
-//					
-//				cal.setTime(schedule.getDepartureTime());
-//				cal.add(Calendar.DATE, i);
-//				nwschedule.setDepartureTime(cal.getTime());
-//				
-//				cal.setTime(schedule.getArrivalTime()); 
-//				cal.add(Calendar.DATE, i); 
-//				nwschedule.setArrivalTime(cal.getTime());
-//				
-//				nwschedule.setTrainNo(schedule.getTrainNo());
-//				nwschedule.setRouteNo(schedule.getRouteNo());
-//				newSchedules.add(nwschedule);
-//			}
-//		}
-//		service.addNewSchedule(newSchedules);
-//	}
+	@GetMapping("/insert.do")
+	public void insertSchedule() {
+		
+		List<TrainSchedule> schedules = service.getAllSchedules();
+		List<TrainSchedule> newSchedules = new ArrayList<>();
+		// 부터 시작!
+		for (int i=41; i<51; i++) {
+			for(TrainSchedule schedule : schedules) {
+				TrainSchedule nwschedule = new TrainSchedule(); 
+				Calendar cal = Calendar.getInstance();
+					
+				cal.setTime(schedule.getDepartureTime());
+				cal.add(Calendar.DATE, i);
+				nwschedule.setDepartureTime(cal.getTime());
+				
+				cal.setTime(schedule.getArrivalTime()); 
+				cal.add(Calendar.DATE, i); 
+				nwschedule.setArrivalTime(cal.getTime());
+				
+				nwschedule.setTrainNo(schedule.getTrainNo());
+				nwschedule.setRouteNo(schedule.getRouteNo());
+				newSchedules.add(nwschedule);
+			}
+		}
+		service.addNewSchedule(newSchedules);
+	}
 }

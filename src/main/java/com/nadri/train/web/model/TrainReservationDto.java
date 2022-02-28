@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 페이지로 부터 좌석 예약 정보를 가져오는 객체
+ * 좌석 예약 정보를 가져오는 객체
  * @author song
  *
  */

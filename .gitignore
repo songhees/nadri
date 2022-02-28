@@ -141,4 +141,5 @@ $RECYCLE.BIN/
 *.lnk
 
 *.cld
+README.md
 # End of https://www.toptal.com/developers/gitignore/api/maven,java,eclipse,windows

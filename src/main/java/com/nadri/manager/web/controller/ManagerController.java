@@ -66,7 +66,7 @@ public class ManagerController {
 		return "manager/userManagement";
 	}
 	
-	@GetMapping("statistics.nadri")
+	@GetMapping("/statistics.nadri")
 	public String statistics(@LoginedManager Manager manager, Model model) {
 		model.addAttribute("famousList", service.getFavoriteTrain());
 		return "manager/statistics";

@@ -6,6 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 환불 정보
+ * @author song
+ *
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

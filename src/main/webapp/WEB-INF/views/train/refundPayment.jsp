@@ -252,7 +252,7 @@
 						$("#modal-refund").find('td').eq(0).text(addCommas(refundPrice))
 						$("#modal-refund").find('td').eq(1).text(addCommas(refundRate))
 						var now = moment(response.canceled_at);
-						$("#modal-refund").find('td').eq(2).text(now.format("YYYY-MM-DD hh:mm"))
+						$("#modal-refund").find('td').eq(2).text(now.format("YYYY-MM-DD HH:mm"))
 						refundModal.show()
 					},
 					error:function(response) {

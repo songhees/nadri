@@ -98,9 +98,18 @@ public interface TrainMapper {
 	List<TrainTicket> getTicketByReservedNo(@Param("reservedNo1") int reservedNo1, @Param("reservedNo2") int reservedNo2);
 	
 	
-	
+	/**
+	 * 검색정보에 해당하는 승차권(티켓) 반환
+	 * @param criteria 검색 정보
+	 * @return
+	 */
 	List<TrainTicket> getTicketByCriteria(TrainTicketCriteria criteria);
 	
+	/**
+	 * 검색정보에 해당하는 모든 승차권 개수
+	 * @param criteria
+	 * @return
+	 */
 	int getTicketCount(TrainTicketCriteria criteria);
 	
 	/**

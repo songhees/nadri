@@ -498,7 +498,8 @@
 	<select id="getSeatList" parameterType="com.nadri.train.vo.TrainTicket" resultType="int">
 		select seat_no
 		from train_ticket
-		where schedule_no = #{scheduleNo}
+		where is_canceled = 'N'
+		and schedule_no = #{scheduleNo}
 		and room_no = #{roomNo}
 		and train_no = #{trainNo}
 		and price_id = #{priceId}

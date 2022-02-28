@@ -10,6 +10,11 @@ import com.nadri.train.exception.LoginException;
 import com.nadri.train.exception.ReservationException;
 import com.nadri.train.web.model.ResponseDto;
 
+/**
+ * 예외처리 controller
+ * @author song
+ *
+ */
 @ControllerAdvice
 public class ExceptionHandlerControllerAdvice {
 	

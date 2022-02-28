@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 import com.nadri.train.service.TrainService;
 import com.nadri.train.vo.TrainReservation;
 
+/**
+ * 에약 시간이 지난 목록을 삭제하는 클래스
+ * @author song
+ *
+ */
 @Component
 public class TrainSchedule {
 	@Autowired
