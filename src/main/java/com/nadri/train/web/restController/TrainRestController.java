@@ -42,6 +42,8 @@ import com.nadri.train.dto.TrainSearchDto;
 import com.nadri.train.dto.TrainTicketCriteria;
 import com.nadri.train.exception.KakaoException;
 import com.nadri.train.exception.LoginException;
+import com.nadri.train.kakaoPay.ReadyResponse;
+import com.nadri.train.service.KakaoPayService;
 import com.nadri.train.service.TrainService;
 import com.nadri.train.util.RefundUtils;
 import com.nadri.train.util.SessionUtils;
@@ -259,7 +261,7 @@ public class TrainRestController {
 	 * @throws IOException
 	 */
 	@PutMapping("/kakaoPay")
-	public String kakaoPay(@LoginedUser User user, @RequestBody TrainPaymentDto dto) throws IOException {
+	public ReadyResponse kakaoPay(@LoginedUser User user, @RequestBody TrainPaymentDto dto) throws IOException {
 		SessionUtils.addAttribute("reservationNo", dto.getReservationNo());
 		String[] reList = dto.getReservationNo().split(" ");
 		TrainReservation reservation = service.getReservationOne(user.getNo(), Integer.parseInt(reList[0]));
@@ -272,41 +274,16 @@ public class TrainRestController {
 			merchandise = reservation.getArrivalStation() + "행 열차";
 			log.info(merchandise);
 		}
-		StringBuffer outPutData = new StringBuffer();
-		outPutData.append("cid=TC0ONETIME")
-				.append("&partner_order_id=").append(dto.getReservationNo())
-				.append("&partner_user_id=").append(user.getId())
-				.append("&item_name=").append(URLEncoder.encode(merchandise, "utf-8"))
-				.append("&quantity=").append(String.valueOf(dto.getTotalCount()))
-				.append("&total_amount=").append(String.valueOf(dto.getTotalPrice()))
-				.append("&tax_free_amount=0")
-				.append("&approval_url=http://localhost/train/kakaoPayment.nadri")
-				.append("&cancel_url=http://localhost/train/reservationList.nadri")
-				.append("&fail_url=http://localhost/train/failPayment.nadri");
-		log.info("확인: " + outPutData.toString());
-		URL address = new URL("https://kapi.kakao.com/v1/payment/ready");
-		HttpURLConnection conn = (HttpURLConnection) address.openConnection();
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Authorization", "KakaoAK 5fa0f0222e9a68676ec86330e233e3e7");
-		conn.setRequestProperty("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
-		conn.setDoOutput(true);
 		
-		OutputStream outPut = conn.getOutputStream();
-		DataOutputStream data = new DataOutputStream(outPut);
-		data.writeBytes(outPutData.toString());
-		data.flush();
-		data.close();
+		ReadyResponse response = KakaoPayService.readyPayment(user.getId(), merchandise, dto);
 		
-		BufferedReader rd;
-
 		for (int i=0; i<ticketList.size(); i++) {
 			ticketList.get(i).setCustomerName(dto.getName().get(i));
 			service.updateTicket(ticketList.get(i));
 		}
 		log.info("성공");
-		rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 		
-		return rd.readLine();
+		return response;
 	}
 	
 	/**
