@@ -1,20 +1,11 @@
 package com.nadri.train.web.controller;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,13 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.nadri.train.dto.TrainCriteria;
 import com.nadri.train.dto.TrainSearchDto;
-import com.nadri.train.exception.KakaoException;
 import com.nadri.train.service.KakaoPayService;
 import com.nadri.train.service.TrainService;
 import com.nadri.train.util.RefundUtils;
@@ -51,6 +40,9 @@ public class TrainController {
 	
 	@Autowired
 	TrainService service;
+	
+	@Autowired
+	private KakaoPayService kakaoPayService;
 	
 	@GetMapping("/fail.nadri")
 	public String error() {
@@ -181,7 +173,7 @@ public class TrainController {
 	public String kakaoPayment(@LoginedUser User user, String pg_token, Model model) throws IOException {
 		String reservationNo = (String)SessionUtils.getAttribute("reservationNo");
 		String tid = (String)SessionUtils.getAttribute("tid");
-		KakaoPayService.payApprove(tid, pg_token, user.getId(), reservationNo);
+		kakaoPayService.payApprove(tid, pg_token, user.getId(), reservationNo);
 		
 		String[] noList = reservationNo.split(" ");
 		if (noList.length == 1) {

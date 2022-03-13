@@ -3,15 +3,12 @@ package com.nadri.manager.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.nadri.manager.annotation.LoginedManager;
-import com.nadri.manager.exception.LoginErrorException;
 import com.nadri.manager.util.SessionUtils;
 import com.nadri.manager.vo.Manager;
 

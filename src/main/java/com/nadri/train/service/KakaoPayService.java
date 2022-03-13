@@ -22,7 +22,7 @@ public class KakaoPayService {
 	 * @param dto
 	 * @return
 	 */
-	public static ReadyResponse readyPayment(String userId, String itemName, TrainPaymentDto dto) {
+	public ReadyResponse readyPayment(String userId, String itemName, TrainPaymentDto dto) {
 		MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<String, Object>();
 		parameters.add("cid", "TC0ONETIME");
 		parameters.add("partner_order_id", dto.getReservationNo());
@@ -57,7 +57,7 @@ public class KakaoPayService {
 	 * @param orderId
 	 * @return
 	 */
-	public static ApproveResponse payApprove(String tid, String pgToken, String userId, String orderId) {
+	public ApproveResponse payApprove(String tid, String pgToken, String userId, String orderId) {
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<String, String>();
 		parameters.add("cid", "TC0ONETIME");
 		parameters.add("tid", tid);
@@ -73,7 +73,7 @@ public class KakaoPayService {
 		return response;
 	}
 	
-	private static HttpHeaders getHeader() {
+	private HttpHeaders getHeader() {
 		HttpHeaders header = new HttpHeaders();
 		header.add("Authorization", "KakaoAK 5fa0f0222e9a68676ec86330e233e3e7");
 		header.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");

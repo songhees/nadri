@@ -3,8 +3,6 @@ package com.nadri.manager.web.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,12 +13,8 @@ import com.nadri.manager.annotation.LoginedManager;
 import com.nadri.manager.service.ManagerService;
 import com.nadri.manager.util.SessionUtils;
 import com.nadri.manager.vo.Manager;
-import com.nadri.manager.web.restController.ManagerRestController;
 import com.nadri.user.vo.User;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Controller
 @RequestMapping("/admin")
 public class ManagerController {

@@ -4,11 +4,8 @@ import java.io.IOException;
 
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nadri.train.exception.LoginException;
-import com.nadri.train.exception.ReservationException;
-import com.nadri.train.web.model.ResponseDto;
 
 /**
  * 예외처리 controller
