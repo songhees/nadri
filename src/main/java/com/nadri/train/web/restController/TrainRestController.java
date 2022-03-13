@@ -5,22 +5,18 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Delete;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,20 +24,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.nadri.train.dto.TrainCriteria;
 import com.nadri.train.dto.TrainModifyDto;
-import com.nadri.train.dto.TrainReservaionTicket;
 import com.nadri.train.dto.TrainReservationCriteria;
 import com.nadri.train.dto.TrainSearchDto;
 import com.nadri.train.dto.TrainTicketCriteria;
 import com.nadri.train.exception.KakaoException;
-import com.nadri.train.exception.LoginException;
 import com.nadri.train.kakaoPay.ReadyResponse;
 import com.nadri.train.service.KakaoPayService;
 import com.nadri.train.service.TrainService;
@@ -70,6 +60,9 @@ public class TrainRestController {
 	
 	@Autowired
 	TrainService service;
+	
+	@Autowired
+	private KakaoPayService kakaoPayService;
 	
 	@GetMapping("/station/{firstWord}")
 	public ResponseDto<TrainStation> getStation(@PathVariable(name="firstWord") int word) {
@@ -275,7 +268,7 @@ public class TrainRestController {
 			log.info(merchandise);
 		}
 		
-		ReadyResponse response = KakaoPayService.readyPayment(user.getId(), merchandise, dto);
+		ReadyResponse response = kakaoPayService.readyPayment(user.getId(), merchandise, dto);
 		
 		for (int i=0; i<ticketList.size(); i++) {
 			ticketList.get(i).setCustomerName(dto.getName().get(i));

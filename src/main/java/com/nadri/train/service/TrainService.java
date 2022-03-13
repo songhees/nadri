@@ -1,6 +1,5 @@
 package com.nadri.train.service;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +26,6 @@ import com.nadri.train.vo.TrainTicket;
 import com.nadri.train.web.model.TrainRoomInfo;
 import com.nadri.train.dto.TrainCriteria;
 import com.nadri.train.dto.TrainFavoriteRouteDto;
-import com.nadri.train.dto.TrainReservaionTicket;
 import com.nadri.train.dto.TrainReservationCriteria;
 
 @Service

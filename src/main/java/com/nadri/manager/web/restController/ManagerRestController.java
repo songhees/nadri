@@ -1,7 +1,6 @@
 package com.nadri.manager.web.restController;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -19,7 +18,6 @@ import com.nadri.manager.service.ManagerService;
 import com.nadri.manager.util.SessionUtils;
 import com.nadri.manager.vo.Manager;
 import com.nadri.manager.web.model.ResponseDto;
-import com.nadri.user.vo.User;
 
 @RestController
 @RequestMapping("/rest/admin")

@@ -23,9 +23,6 @@ import com.nadri.manager.util.Pagination;
 import com.nadri.manager.vo.Manager;
 import com.nadri.user.vo.User;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class ManagerService {
 	@Autowired
