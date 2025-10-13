@@ -5,9 +5,11 @@
 기간 : **2022/01/09 ~ 2022/02/15** (약 한달)  
 인원 : 4명
 
+</br>
+  
 문서
-요구사항 명세서 : [요구사항 명세서.xlsx](https://docs.google.com/spreadsheets/d/1iVhGZGFbOrr7l8U4MRBDEMe6p2vyqEvS/edit?gid=1989157911#gid=1989157911)
-prototype : [스토리보드.pdf](https://drive.google.com/file/d/1NdjkCqWZSKIVO4QT7jR05qrFgnwoJlnQ/view?usp=sharing)
+- 요구사항 명세서 : [요구사항 명세서.xlsx](https://docs.google.com/spreadsheets/d/1iVhGZGFbOrr7l8U4MRBDEMe6p2vyqEvS/edit?gid=1989157911#gid=1989157911)  
+- prototype : [스토리보드.pdf](https://drive.google.com/file/d/1NdjkCqWZSKIVO4QT7jR05qrFgnwoJlnQ/view?usp=sharing)  
 
 </br>
 
